@@ -1,0 +1,11 @@
+.form-area{
+	background: url('https://i.ibb.co/QDXJ8vw/bannerbackground.png');
+	background-repeat: no-repeat;
+	width: 100%;
+  	height: 300px;
+  	background-position: center center;
+	background-size: cover;
+}
+.user-profile-info{
+	margin-top: 80px;
+}
