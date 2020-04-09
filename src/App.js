@@ -13,6 +13,7 @@ import UserProfile from './components/Page/UserProfile';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import Checkout from './components/Cart/Checkout';
 import Foods from './components/Page/Foods';
+import InsertData from './components/InsertData/InsertData';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Route exact path="/" component={HomePage} />
       <Route path="/signup" component={SignUp} />  
       <Route path="/login" component={Login} />
+      <Route path="/insert_data" component={InsertData} />
       <PrivateRoute path="/cart">
             <Cart />
       </PrivateRoute>

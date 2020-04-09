@@ -1,19 +1,23 @@
 import React, { useState, useEffect, useContext } from 'react';
 import './FoodDetails.css'
 import { useParams, Link } from 'react-router-dom';
-import foods from '../../fakeData/fakeData';
 import { UserContext } from '../auth/useAuth';
 
 const FoodDetails = (props) => {
-  const {addToCart } = useContext(UserContext)
+  const { addToCart } = useContext(UserContext)
   const pdId = useParams()
   const [quantity, setQuantity] = useState(1)
   const [product, setProduct] = useState(null)
 
+
   useEffect(()=>{
-    const data = foods.filter(item => item.key === parseInt(pdId.key))
-    setProduct(data[0])
-  }, [pdId])
+    fetch('http://localhost:4000/products/'+pdId.key)
+    .then(res => res.json())
+    .then(data => {
+      console.log('single food from cloud db', data);
+      setProduct(data)
+    })
+  }, [])
 
   // onchange handler
   const onchangeHandler = e => {
@@ -26,7 +30,12 @@ const FoodDetails = (props) => {
   
   const cartHandler = item => {
     // console.log(id);
+    // console.log('Food Added', item);
+    // const newCart = [...cartElement, item];
+    // setCartElement(newCart);
+
     
+
     addToCart({...item, quantity})
     props.history.push('/cart')
   }
@@ -48,7 +57,7 @@ const FoodDetails = (props) => {
         <div className="row">
           <div className="col-md-6 py-5">
             <div className="food-details-content">
-              <h3>{product && product.title}</h3>
+              <h3>{product && product.title} </h3>
               <p className="subtitle muted pt-3">{product && product.description}</p>
             <div className="cart-item d-flex align-items-center p-3">
               <h3>${product && product.price}</h3>

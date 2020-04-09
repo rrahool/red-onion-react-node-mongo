@@ -16,7 +16,7 @@ const ChooseUs = () => {
                 dagwood's at. Boy prosperous increasing surround </p>
         </div>
         <div className="row">
-            {chooseItems.map(item => <ChooseItem key={item.id} item={item} />)}
+            {chooseItems.map(item => <ChooseItem key={item.key} item={item} />)}
         </div>
     </div>
 </section>

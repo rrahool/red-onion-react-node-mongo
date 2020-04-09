@@ -3,6 +3,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import firebaseConfig from "../firebase.config";
+import { addToDatabaseCart } from '../../utilities/databaseManager';
 
 firebase.initializeApp(firebaseConfig);
 
@@ -106,34 +107,41 @@ const UserProvider = (props) => {
 
   // add product to cart
   const addToCart = item => {
-    let isExist = cart.find(e => e.id  === item.id)
-   if(!isExist) {
-     item.proTotalPrice = item.quantity * item.price
-      let updateCart = [...cart, item]
-      setCart(updateCart)
+    const toBeAddedKey = item.key;
+    let sameProduct = cart.find(e => e.key  === toBeAddedKey)
+    let count = 1;
+    let newCart;
+    
+   if(!sameProduct) {
+      item.proTotalPrice = item.quantity * item.price;
+      newCart = [...cart, item]
    } else {
-     isExist.quantity = isExist.quantity + item.quantity
-     isExist.proTotalPrice = isExist.price * item.quantity
-     let index = cart.indexOf(isExist.id)
-     cart[index] = isExist
-     let updateCart = [...cart]
-      setCart(updateCart)    
+     count = sameProduct.quantity + item.quantity;
+     sameProduct.quantity = count;
+     sameProduct.proTotalPrice = sameProduct.price * item.quantity
+    //  let index = cart.indexOf(sameProduct.key)
+    //  cart[index] = sameProduct
+    //  newCart = [...cart] 
+     const others = cart.filter(e => e.key !== toBeAddedKey);
+     newCart = [...others, sameProduct];
    }
-   
+   setCart(newCart);
+   addToDatabaseCart(item.key, count);
+   console.log(cart.length);
   }
 
 
   // product quantity add remove
 
   const calculateQuantity = (item, event) => {
-    let product = cart.find(e => e.id === item.id)
+    let product = cart.find(e => e.key === item.key)
     product.quantity = product.quantity + event;
     product.proTotalPrice = product.price * product.quantity;
     if(product.quantity === 0) {
-      let updateProduct = cart.filter(e => e.id !== product.id)
+      let updateProduct = cart.filter(e => e.key !== product.key)
       setCart(updateProduct)
     } else {
-      let index = cart.indexOf(product.id);
+      let index = cart.indexOf(product.key);
       cart[index] = product
       let updateProduct = [...cart]
       setCart(updateProduct)

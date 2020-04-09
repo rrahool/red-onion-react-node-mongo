@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import foods from '../../fakeData/fakeData';
 import FoodItem from '../Food/FoodItem';
 
 const Foods = () => {
   const [items, setItems] = useState([])
 
   useEffect(() => {
-      setItems(foods)
+    fetch('http://localhost:4000/products')
+    .then(res => res.json())
+      .then(data => {
+        console.log("data from database", data);
+        setItems(data);
+    });
   }, [])
+
   return (
     <div className="container">
       <div className="row food-items">

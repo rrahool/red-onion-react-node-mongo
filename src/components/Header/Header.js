@@ -4,11 +4,11 @@ import { Link, withRouter } from 'react-router-dom'
 import { UserContext } from '../auth/useAuth';
 
 
-const LoginUser = ({route}) => {
-    const {logout} = useContext(UserContext)
+const LoginUser = ({ route }) => {
+    const { logout } = useContext(UserContext)
     const logOutHandler = () => {
         logout()
-        route.history.push('/login')        
+        route.history.push('/login')
     }
     return (
         <>
@@ -27,16 +27,16 @@ const LogoutUser = () => {
 }
 
 const Header = (props) => {
-    const {user, cart} = useContext(UserContext)
+    const { user, cart } = useContext(UserContext)
     const [cartItem, setCartItem] = useState('')
-    useEffect(()=>{
-        if(cart.length > 0 ) {
+    useEffect(() => {
+        if (cart.length > 0) {
             setCartItem(cart.length)
         } else {
             setCartItem('')
         }
 
-        
+
     }, [cart])
 
     return (
@@ -51,12 +51,17 @@ const Header = (props) => {
                     <div className="col">
                         <div className="header-right">
                             <div className="d-flex">
-                                {user ? <LoginUser route={props} /> : <LogoutUser/> }
-                            <Link to="/cart">
-                                <button className="btn"> 
+                                {user ? <LoginUser route={props} /> : <LogoutUser />}
+                                <Link to="/cart">
+                                    <button className="btn">
                                         <i className="fa fa-cart-plus" aria-hidden="true">
-                                            </i> <span style={{color:'red'}}> {cart && cartItem}</span>
-                                    </button></Link>
+                                        </i> <span style={{ color: 'red' }}> {cart && cartItem}</span>
+                                    </button>
+                                </Link>
+
+                                <Link to="/insert_data">
+                                    <button className="btn btn-outline-danger xtra-btn">Insert Data</button> 
+                                </Link>
                             </div>
                         </div>
                     </div>
