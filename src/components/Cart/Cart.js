@@ -99,6 +99,13 @@ if(cart.length === 0) {
 
 
 const handleCheckout = () => {
+
+  checkOutOrder()
+  props.history.push('/checkout')
+}
+const handleSubmit = e => {
+  e.preventDefault()
+  
   //TODO: Rahul move this after payment
   console.log(user.email);
   
@@ -118,12 +125,6 @@ const handleCheckout = () => {
       alert("Order Placed Successfully. Your Order ID is: " + data._id);
       processOrder();
   });
-  
-  checkOutOrder()
-  props.history.push('/checkout')
-}
-const handleSubmit = e => {
-  e.preventDefault()
 }
 
 // const onSubmit = data => {
