@@ -1,5 +1,5 @@
 import React from 'react';
-import foods from '../../fakeData/fakeData';
+import foods, {chooseData} from '../../fakeData/fakeData';
 
 const InsertData = () => {
 
@@ -20,6 +20,23 @@ const InsertData = () => {
   
     }
 
+    const handleAddChooseUs = () => {
+        const chooseUs = chooseData[0];
+        console.log("Before post choose data", chooseData.length);
+        fetch('http://localhost:4000/addChooseData', {
+            method: 'POST', 
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(chooseData) 
+          })
+          .then(res => res.json())
+          .then(data => {
+            console.log("Choose Us post Success", data);
+        });
+  
+    }
+
 
     return (
         <div className="col text-center">
@@ -27,6 +44,7 @@ const InsertData = () => {
             <h1>Inser Data</h1>
             <br/>
             <button onClick={handleAddFoods} className="btn btn-lg btn-primary xtra-btn">Insert Foods</button><br/><br/>
+            <button onClick={handleAddChooseUs} className="btn btn-lg btn-danger xtra-btn">Insert Choose Us Items</button><br/><br/>
         </div>
     );
 };

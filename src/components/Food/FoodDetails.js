@@ -2,12 +2,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import './FoodDetails.css'
 import { useParams, Link } from 'react-router-dom';
 import { UserContext } from '../auth/useAuth';
+import {addToDatabaseCart} from '../../utilities/databaseManager'
 
 const FoodDetails = (props) => {
+  
   const { addToCart } = useContext(UserContext)
-  const pdId = useParams()
-  const [quantity, setQuantity] = useState(1)
-  const [product, setProduct] = useState(null)
+  const pdId = useParams();
+  const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState(null);
+  // const [cart, setCart] = useState([]);
+
 
 
   useEffect(()=>{
@@ -19,12 +23,14 @@ const FoodDetails = (props) => {
     })
   }, [])
 
+
   // onchange handler
   const onchangeHandler = e => {
     if(!isNaN(e.target.value)) {
       setQuantity(e.target.value)
     }
   }
+  
 
   console.log(product);
   
@@ -32,22 +38,26 @@ const FoodDetails = (props) => {
     // console.log(id);
     // console.log('Food Added', item);
     // const newCart = [...cartElement, item];
-    // setCartElement(newCart);
-
-    
+    // setCartElement(newCart);   
 
     addToCart({...item, quantity})
-    props.history.push('/cart')
+    addToDatabaseCart(item.key, quantity);
+    console.log(item.key, quantity);
+    
+    props.history.push('/cart');
   }
 
   const quantityHandler = quan => {
     if(quantity < 0 || quantity === 0) {
-      setQuantity(0)
+      setQuantity(0);  
     } else {
-      setQuantity(quantity-quan)
+      setQuantity(quantity);  
     }
+    // addToDatabaseCart(pdId.key, quantity);
   }
-  // console.log(product.title);  
+
+  // console.log(pdId.key, quantity);
+  
 
   return (
     <>
@@ -75,6 +85,8 @@ const FoodDetails = (props) => {
                   onClick={()=>setQuantity(quantity*1 +1)}
                   className="btn btn-default" 
                   id="add-product"><i className="fas fa-plus"></i></button>
+                  
+                  
               </div>
             </div>
             <button className="btn primary-btn btn-cart" onClick={()=>cartHandler(product)}>

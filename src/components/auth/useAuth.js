@@ -3,7 +3,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import firebaseConfig from "../firebase.config";
-import { addToDatabaseCart } from '../../utilities/databaseManager';
+import { addToDatabaseCart, getDatabaseCart } from '../../utilities/databaseManager';
 
 firebase.initializeApp(firebaseConfig);
 
@@ -105,49 +105,79 @@ const UserProvider = (props) => {
   }
 
 
-  // add product to cart
+  // add product to cart and get data from cart
   const addToCart = item => {
     const toBeAddedKey = item.key;
-    let sameProduct = cart.find(e => e.key  === toBeAddedKey)
+    let sameItem = cart.find(e => e.key  === toBeAddedKey)
     let count = 1;
     let newCart;
     
-   if(!sameProduct) {
+   if(!sameItem) {
+      item.quantity = 1;
       item.proTotalPrice = item.quantity * item.price;
       newCart = [...cart, item]
    } else {
-     count = sameProduct.quantity + item.quantity;
-     sameProduct.quantity = count;
-     sameProduct.proTotalPrice = sameProduct.price * item.quantity
-    //  let index = cart.indexOf(sameProduct.key)
-    //  cart[index] = sameProduct
-    //  newCart = [...cart] 
+     count = sameItem.quantity + item.quantity;
+     sameItem.quantity = count;
+     sameItem.proTotalPrice = sameItem.price * item.quantity;
      const others = cart.filter(e => e.key !== toBeAddedKey);
-     newCart = [...others, sameProduct];
+     newCart = [...others, sameItem];
    }
-   setCart(newCart);
-   addToDatabaseCart(item.key, count);
-   console.log(cart.length);
-  }
+   setCart(newCart);   
+  //  addToDatabaseCart(item.key, count);
+   console.log(item.key, count);
 
+  }
 
   // product quantity add remove
 
+  // const calculateQuantity = (item, event) => {
+  //   const toBeAddedKey = item.key;
+  //   let product = cart.find(e => e.key === toBeAddedKey)
+  //   let count = 1;
+  //   let updateProduct;
+
+  //   if(product.quantity === 0) {
+  //     product.quantity = product.quantity + event;
+  //     product.proTotalPrice = product.price * product.quantity;
+  //     updateProduct = cart.filter(e => e.key !== product.key)
+      
+  //   } else {
+  //     count = product.quantity + event;
+  //     product.quantity = count;
+  //     product.proTotalPrice = product.price * product.quantity;
+  //     const others = cart.filter(e => e.key !== toBeAddedKey);
+  //     updateProduct = [...others, product]
+  //   }
+  //   setCart(updateProduct);
+  //   console.log(updateProduct);
+    
+  //   addToDatabaseCart(item.key, count);
+  // }
+
   const calculateQuantity = (item, event) => {
+
     let product = cart.find(e => e.key === item.key)
+
     product.quantity = product.quantity + event;
     product.proTotalPrice = product.price * product.quantity;
+
+    let updateProduct;
+    
     if(product.quantity === 0) {
-      let updateProduct = cart.filter(e => e.key !== product.key)
+      updateProduct = cart.filter(e => e.key !== product.key)
       setCart(updateProduct)
     } else {
       let index = cart.indexOf(product.key);
       cart[index] = product
-      let updateProduct = [...cart]
+      updateProduct = [...cart]
       setCart(updateProduct)
     }
-    
+    console.log(product.key, product.quantity);
+    addToDatabaseCart(product.key, product.quantity);
   }
+
+ 
 
   // place order and remove cart item
   const checkOutOrder = () => {

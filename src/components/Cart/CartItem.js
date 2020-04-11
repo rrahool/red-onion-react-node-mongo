@@ -3,11 +3,16 @@ import './CartItem.css'
 import { UserContext } from '../auth/useAuth';
 
 const CartItem = ({item, onchangeHandler}) => {
-
+  
   const {calculateQuantity} = useContext(UserContext)
 
-  const {img, title, proTotalPrice, quantity} =item;
+  const {img, title, proTotalPrice, quantity} = item;
   const sortTitle = title.slice(0,5)
+
+  // let showFood = showFromCart(item);
+  // console.log(showFood);
+  
+
   return (
     <div className="order-item-aria my-3">
     <div className="single-order d-flex align-items-center">

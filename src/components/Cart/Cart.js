@@ -1,12 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { UserContext } from '../auth/useAuth';
+import { UserContext, UserProvider } from '../auth/useAuth';
 import InputItem from '../auth/InputItem/InputItem'
 import './Cart.css'
 import CartItem from './CartItem';
 import { withRouter, Link } from 'react-router-dom';
+import { getDatabaseCart, processOrder } from '../../utilities/databaseManager';
 
 const Cart = (props) => {
-  const { cart, checkOutOrder } = useContext(UserContext)
+  const { cart, checkOutOrder, user } = useContext(UserContext)
 
   const [address, setAddress] = useState('')
   const [homeNo, setHomeNo] = useState('')
@@ -16,11 +17,43 @@ const Cart = (props) => {
   const [deliveryFee] = useState(2)
   const [tax] = useState(5)
   const [subTotal, setSubTotal] = useState(5)
+  const [cartElement, setCartElement] = useState([])
   
   useEffect(()=> {
       let totalPrice = cart.reduce( (total, item) => total + item.proTotalPrice , 0 )
     setSubTotal(totalPrice)
   },[cart])
+
+  useEffect( () => {
+    //cart
+    const savedCart = getDatabaseCart();
+    const productKeys = Object.keys(savedCart);
+    console.log(productKeys);
+    fetch('http://localhost:4000/getProductsByKey/', {
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(productKeys) 
+    })
+    .then(res => res.json())
+    .then(data => {
+          console.log(data);
+          
+          const cartProducts = productKeys.map( key => {
+          const product = data.find(pd => pd.key === key);
+          console.log(product);
+
+          product.quantity = savedCart[key];
+          console.log(product.quantity);
+
+          return product;
+        });
+        // console.log(cartProducts);
+        setCartElement(cartProducts);
+    })
+    
+}, []);
 
   const [disabled, setDisabled] = useState(false)
   useEffect(()=> {
@@ -66,12 +99,39 @@ if(cart.length === 0) {
 
 
 const handleCheckout = () => {
+  //TODO: Rahul move this after payment
+  console.log(user.email);
+  
+  const savedCart = getDatabaseCart(); 
+  const orderDetails = {email: user.email, cart: savedCart};
+
+  fetch('http://localhost:4000/placeOrder', {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(orderDetails) 
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log("Order Placed", data);
+      alert("Order Placed Successfully. Your Order ID is: " + data._id);
+      processOrder();
+  });
+  
   checkOutOrder()
   props.history.push('/checkout')
 }
-const hanleSubmit = e => {
+const handleSubmit = e => {
   e.preventDefault()
 }
+
+// const onSubmit = data => {
+//   //TODO: Rahul move this after payment
+//   console.log(getUserProfile);
+  
+//   // const savedCart = getDatabaseCart(); 
+// }
 
   return (
     <div className="container pt-5 mt-5">
@@ -81,7 +141,7 @@ const hanleSubmit = e => {
             <h3>Edit Delivery Details </h3>
           </div>
 
-          <form onSubmit={hanleSubmit}>
+          <form onSubmit={handleSubmit}>
             <InputItem name="address"
               type="text" placeholder="Deliver to door"
               onchangeHandler={onchangeHandler} value={address} />
@@ -112,7 +172,7 @@ const hanleSubmit = e => {
 
             <div className="orders-items-aria">
 
-              {cart.map(item => <CartItem item={item} key={item.key} />)}
+              {cart.map(item => <CartItem item={item} key={item.key} quantity={item.quantity} />)}
 
             </div>
             <div className="order-price-aira">
