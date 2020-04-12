@@ -119,13 +119,13 @@ const UserProvider = (props) => {
    } else {
      count = sameItem.quantity + item.quantity;
      sameItem.quantity = count;
-     sameItem.proTotalPrice = sameItem.price * item.quantity;
+     sameItem.proTotalPrice = sameItem.price * item.quantity;     
      const others = cart.filter(e => e.key !== toBeAddedKey);
      newCart = [...others, sameItem];
    }
    setCart(newCart);   
   //  addToDatabaseCart(item.key, count);
-   console.log(item.key, count);
+  //  console.log(item.key, count, newCart);
 
   }
 
@@ -158,7 +158,8 @@ const UserProvider = (props) => {
   const calculateQuantity = (item, event) => {
 
     let product = cart.find(e => e.key === item.key)
-
+    // console.log(product, product.key);
+    
     product.quantity = product.quantity + event;
     product.proTotalPrice = product.price * product.quantity;
 
@@ -173,7 +174,7 @@ const UserProvider = (props) => {
       updateProduct = [...cart]
       setCart(updateProduct)
     }
-    console.log(product.key, product.quantity);
+    // console.log(product.key, product.quantity, updateProduct);
     addToDatabaseCart(product.key, product.quantity);
   }
 
@@ -193,6 +194,7 @@ const UserProvider = (props) => {
         login,
         logout,
         cart,
+        setCart,
         addToCart,
         checkOutOrder,
         calculateQuantity,

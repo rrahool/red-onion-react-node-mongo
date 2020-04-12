@@ -7,7 +7,10 @@ import { withRouter, Link } from 'react-router-dom';
 import { getDatabaseCart, processOrder } from '../../utilities/databaseManager';
 
 const Cart = (props) => {
-  const { cart, checkOutOrder, user } = useContext(UserContext)
+  const { cart, setCart, checkOutOrder, user } = useContext(UserContext)
+  
+  console.log(cart);
+  
 
   const [address, setAddress] = useState('')
   const [homeNo, setHomeNo] = useState('')
@@ -17,18 +20,19 @@ const Cart = (props) => {
   const [deliveryFee] = useState(2)
   const [tax] = useState(5)
   const [subTotal, setSubTotal] = useState(5)
-  const [cartElement, setCartElement] = useState([])
+  // const [cartElement, setCartElement] = useState('')
   
   useEffect(()=> {
       let totalPrice = cart.reduce( (total, item) => total + item.proTotalPrice , 0 )
-    setSubTotal(totalPrice)
-  },[cart])
+      // debugger;
+      setSubTotal(totalPrice)
+  }, [cart])
 
   useEffect( () => {
     //cart
     const savedCart = getDatabaseCart();
     const productKeys = Object.keys(savedCart);
-    console.log(productKeys);
+    // console.log(productKeys);
     fetch('http://localhost:4000/getProductsByKey/', {
         method: 'POST', 
         headers: {
@@ -38,19 +42,19 @@ const Cart = (props) => {
     })
     .then(res => res.json())
     .then(data => {
-          console.log(data);
+          // console.log(data);
           
           const cartProducts = productKeys.map( key => {
-          const product = data.find(pd => pd.key === key);
-          console.log(product);
+            const product = data.find(pd => pd.key === key);
+            // console.log(product);
 
-          product.quantity = savedCart[key];
-          console.log(product.quantity);
+            product.quantity = savedCart[key];
+            // console.log(product.quantity);
 
-          return product;
+            return product;
         });
-        // console.log(cartProducts);
-        setCartElement(cartProducts);
+        // console.log("Cart Product", cartProducts);
+        setCart(cartProducts);
     })
     
 }, []);
@@ -105,9 +109,9 @@ const handleCheckout = () => {
 }
 const handleSubmit = e => {
   e.preventDefault()
-  
+
   //TODO: Rahul move this after payment
-  console.log(user.email);
+  // console.log(user.email);
   
   const savedCart = getDatabaseCart(); 
   const orderDetails = {email: user.email, cart: savedCart};
@@ -173,7 +177,7 @@ const handleSubmit = e => {
 
             <div className="orders-items-aria">
 
-              {cart.map(item => <CartItem item={item} key={item.key} quantity={item.quantity} />)}
+              {cart.map(item => <CartItem item={item} key={item.key}  />)}
 
             </div>
             <div className="order-price-aira">

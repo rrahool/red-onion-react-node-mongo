@@ -7,6 +7,8 @@ const CartItem = ({item, onchangeHandler}) => {
   const {calculateQuantity} = useContext(UserContext)
 
   const {img, title, proTotalPrice, quantity} = item;
+  // console.log(title, quantity, item, proTotalPrice);
+  
   const sortTitle = title.slice(0,5)
 
   // let showFood = showFromCart(item);
@@ -21,7 +23,7 @@ const CartItem = ({item, onchangeHandler}) => {
       </div>
       <div className="price-aria text-center w-25">
         <h6>{sortTitle}</h6>
-        <h6>{proTotalPrice.toFixed(2)}</h6>
+        <h6>{proTotalPrice}</h6>
       </div>
       <div className="quantity-aria w-50">
         <div className="input-group">
