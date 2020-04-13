@@ -59,9 +59,9 @@ const Header = (props) => {
                                     </button>
                                 </Link>
 
-                                <Link to="/insert_data">
+                                {/* <Link to="/insert_data">
                                     <button className="btn btn-outline-danger xtra-btn">Insert Data</button> 
-                                </Link>
+                                </Link> */}
                             </div>
                         </div>
                     </div>
