@@ -15,7 +15,7 @@ const FoodDetails = (props) => {
 
 
   useEffect(()=>{
-    fetch('http://localhost:4000/products/'+pdId.key)
+    fetch('https://murmuring-island-63468.herokuapp.com/products/'+pdId.key)
     .then(res => res.json())
     .then(data => {
       console.log('single food from cloud db', data);

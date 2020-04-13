@@ -95,6 +95,12 @@ input:focus {
   border-bottom: 1px solid gray;
   margin-bottom: 25px;
 }
+
+.payment-details  {
+  border-bottom: 1px solid gray;
+  margin-bottom: 25px;
+}
+
 p.see-all {
   cursor: pointer;
   transition: .3s;

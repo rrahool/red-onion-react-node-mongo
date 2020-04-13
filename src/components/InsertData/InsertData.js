@@ -6,7 +6,7 @@ const InsertData = () => {
     const handleAddFoods = () => {
         const product = foods[0];
         console.log("Before post food", foods.length);
-        fetch('http://localhost:4000/addProduct', {
+        fetch('https://murmuring-island-63468.herokuapp.com/addProduct', {
             method: 'POST', 
             headers: {
               'Content-Type': 'application/json'
@@ -23,7 +23,7 @@ const InsertData = () => {
     const handleAddChooseUs = () => {
         const chooseUs = chooseData[0];
         console.log("Before post choose data", chooseData.length);
-        fetch('http://localhost:4000/addChooseData', {
+        fetch('https://murmuring-island-63468.herokuapp.com/addChooseData', {
             method: 'POST', 
             headers: {
               'Content-Type': 'application/json'

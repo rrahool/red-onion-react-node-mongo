@@ -1,6 +1,7 @@
 import React from 'react';
 
 const Checkout = () => {
+  
   return (
     <div className="container">
       <h1 className="text-center">Order Completed! Your Food is Riding Soon.</h1>

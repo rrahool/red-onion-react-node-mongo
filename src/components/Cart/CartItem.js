@@ -7,7 +7,7 @@ const CartItem = ({item, onchangeHandler}) => {
   const {calculateQuantity} = useContext(UserContext)
 
   const {img, title, proTotalPrice, quantity} = item;
-  // console.log(title, quantity, item, proTotalPrice);
+  console.log(title, quantity, item, proTotalPrice);
   
   const sortTitle = title.slice(0,5)
 
